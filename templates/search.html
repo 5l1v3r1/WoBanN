@@ -1,0 +1,57 @@
+{% extends 'index.html' %}
+{% block page-content %}
+
+
+ <div class="wpn" id="project">
+        <!--  -->
+        <div class="cl pos">
+            <ul class="h-screen">
+                <li class="on"><a href="javascript:;" title="首页推荐">搜索结果</a></li></ul>
+            <!--  -->
+
+        </div>
+  <ul class="post post-works mtw cl">
+             {% for news_list in data  %}
+                        <li>
+                            <!--  -->
+
+                            <div class="shade" style="opacity: 0;"></div>
+                            <!--  -->
+
+                            <!--<div class="cover pos">-->
+                                <!--<a href="/{{type}}/{{news_list.id}}/"  title="大话手游项目作品">-->
+                                    <!--<img width="280" height="210" src="/medias/{{news_list.newpic}}"  class="imgloadinglater" alt="大话手游项目作品" rel="nofollow" style="display: inline;">-->
+                                <!--</a>-->
+                            <!--</div>-->
+                            <div class="info">
+                                <h4 class="title ellipsis download">
+                                	                                   {{news_list.title}}                              </h4>
+                                                                <div class="msg mtn cl">
+                                    <span class="classify">原创</span>
+                                    <span><i class="icon-eye" title="浏览数"></i><em>{{news_list.focususer.count}}</em></span>
+
+                     <span><i class="icon-comment" title="评论数"></i><em>{{news_list.reply_count}}</em></span>
+                        <span><i class="icon-leaf" title="点赞数"></i><em>{{ news_list.favor_count}}</em></span>
+                                </div>
+                                <p class="user cl">
+                                    <a href="http://i.ui.cn/ucenter/1060864.html" target="_blank">
+                                        <img src="/medias/{{news_list.user.userpic}}" title="zengtaofrank">
+                                        <strong class="name">
+                                        <em>{{news_list.user.username}}</em>
+                                        </strong></a>
+                                </p>
+                            </div>
+                            <!--  分隔线  -->
+                            <div class="line"></div>
+                        </li>
+                		{% endfor %}
+                        <li>
+ <div class="h_page mtn mbw">
+                <ul class="cl">
+                   {{ page }}
+
+                </ul>
+
+{% endblock %}
+
+ </div>
