@@ -553,6 +553,6 @@ textarea.control-input { height: auto; }
 }
 /*网站整体灰色背景*/
 body,
-.body-gray { background-color: #eff3f5; }
+.body-gray { background-color:  #fff; }
 /*部分白色背景*/
 .bg-white { background-color: #fff;}

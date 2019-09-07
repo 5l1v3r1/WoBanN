@@ -73,7 +73,7 @@ urlpatterns = [
     url(r'^mobile_docdetail/(\d+)/$', mobile_docdetail),
     url(r'^mobile_login/$',mobile_login),
     url(r'^mobile_register/$', mobile_register),
-    url(r'^mobile_user_center/$', mobile_user_center),
+    url(r'^mobile_user_center/(?P<page>\d*)$', mobile_user_center),
     url(r'^mobile_user_push/$', mobile_user_push),
     url(r'^test/$', test),
     url(r'^mobile_tag_serach/(?P<page>\d*)$', mobile_tag_serach),

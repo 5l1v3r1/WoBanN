@@ -72,7 +72,7 @@
 </script>   
     
 
-
+            		<div style="padding-bottom: 60px"></div>
 
 <div id="wrapper" class="wpn mtv mbv cl" pid="280024">
 	<div class="main works-main">
@@ -118,9 +118,12 @@
 		</div><!-- .works-top -->
 
 		<div class="contents wrap" id="p-content">
-		<div style="padding-left:2em;padding-right:2em;font-size:19px" >
+		<div style="padding-left:2em;padding-right:2em;font-size:16px;" >
 
-            <p style="width: 60px; margin: 0px auto">{{docnews.content|safe}}</p>
+       {% autoescape off %}
+
+		 <p >{{docnews.content }}     </p>
+		{% endautoescape %}
 	</div>
         </div><!-- .works-cont -->
 
@@ -128,26 +131,27 @@
 
 		<div class="works-bottom cl">
 
-			<div class="share cl">
-				<div class="weixin-box">
-					<div id="qrcodeCanvas" style="display:inline-block"></div>
+			<!--<div class="share cl">-->
+				<!--<div class="weixin-box">-->
+					<!--<div id="qrcodeCanvas" style="display:inline-block"></div>-->
 
-					<p style="top:-20px">打开微信“扫一扫”，将本文章分享到朋友圈</p>
-					<a href="javascript:;"><i class="icon-close"></i></a>
-				</div>
+					<!--<p style="top:-20px">打开微信“扫一扫”，将本文章分享到朋友圈</p>-->
+					<!--<a href="javascript:;"><i class="icon-close"></i></a>-->
+				<!--</div>-->
 
 
 
-				<a href="javascript:;" id="share-sina"><i class="icon-sina2">新</i></a>
-				<a href="javascript:;" id="share-huaban"><i class="icon-huaban3">豆</i></a>
-				<p class="tip">快给朋友分享吧！</p>
-			</div>
+				<!--<a href="javascript:;" id="share-sina"><i class="icon-sina2">新</i></a>-->
+				<!--<a href="javascript:;" id="share-huaban"><i class="icon-huaban3">豆</i></a>-->
+				<!--<p class="tip">快给朋友分享吧！</p>-->
+			<!--</div>-->
 			<ul class="oper">
 													<li>
 
-				<a class="btn-item letter_num"  onclick="Favor(this,{{docnews.id}});"><em id="favnum">{{docnews.favor_count}}</em><i class="icon-envelope-thin2"></i><span>点赞</span></a>
-
-						<a onclick="doc_collect(this,{{ docnews.id }})" id="doc_collect_id" data="add"><em id="focususer">{{docnews.focususer.count}}</em><i class="icon-star-solid2"></i><strong>收藏</strong></a>
+		<a class="btn-item letter_num"  onclick="Favor(this,{{docnews.id}});"><em id="favnum">{{docnews.favor_count}}</em><i class="icon-envelope-thin2"></i><botton>点赞</botton></a>
+<br>
+		<a onclick="doc_collect(this,{{ docnews.id }})" id="doc_collect_id" data="add"><em id="focususer">{{docnews.focususer.count}}</em><i class="icon-star-solid2"></i>
+			<strong>收藏</strong></a>
 
 					</li>			</ul>
 			<div class="works-zan pos cl">
@@ -178,7 +182,7 @@
 				<i class="icon-tag2"></i><span>游戏页面</span></a></li><li><a href="http://s.ui.cn/?keywords=web" target="_blank">
 			<i class="icon-tag2"></i><span>web</span></a></li-->
 
-			<li style="float:right;"><span><i class="icon-time2">创建于：</i>{{docnews.create_date}}</span></li>
+			<li style="float:right;margin-bottom: 30px"><span><i class="icon-time2">创建于：</i>{{docnews.create_date}}</span></li>
 			<div style="clear:both">
 
 		</div>
@@ -734,30 +738,7 @@ jQuery(document).ready(function($) {
 <script src="/statics/js/docdetail/share.js"></script>
 <script src="/statics/js/docdetail/face.js"></script>
 <script src="/statics/js/docdetail/comment.js"></script>
-<!---footer---->
-<div class="ft-wp">
-    <div class="wpn cl">
-        <div class="ft cl">
 
-            <div class="ft-info">
-                <ul class="ft-nav cl">
-                    <li><a href="#" target="_blank">商务合作</a></li>
-                    <li><a href="#" target="_blank">意见反馈</a></li>
-                    <li><a href="#" target="_blank">关于我们</a></li>
-                    <li><a href="#" target="_blank">联系我们</a></li>
-                    <li><a href="#" target="_blank">版权声明</a></li>
-                    <li><a href="#" target="_blank">官方QQ群</a></li>
-
-                </ul>
-                <p class="copy"><a href="#">闽ICP备19017760号</a>
-                 / 闽ICP备19017760号 / Powered by  2008-2017 ais580.com</p>
-
-
-            </div>
-        </div><!-- ft -->
-    </div><!-- wpn -->
-</div>
-<!---->
 <!--div id="scrollUp" class="scrollup" style="display: block;">
     <a class="arrows" title="返回顶部" href="javascript:;"></a>
 	<a class="service" title="QQ" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1369535553&site=qq&menu=yes">

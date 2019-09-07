@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'kbhkis9znjtr^2*1_pd#21#n)fce-8z3l%a)^881p+%vx=!g)7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -142,17 +142,17 @@ STATICFILES_DIRS = (
 #    os.path.join(BASE_DIR, "medias"),
     
 )
-DEFAULT_FORM_EMAIL = '674702627@qq.com'
+DEFAULT_FORM_EMAIL = 'ais580com@foxmail.com'
 #邮件配置
 EMAIL_HOST = 'smtp.qq.com'                   #SMTP地址
 EMAIL_PORT = 587                             #SMTP端口
-EMAIL_HOST_USER = '674702627@qq.com'       #我自己的邮箱
-EMAIL_HOST_PASSWORD = 'uvtqwnvkvkyvbbef'                  #我的邮箱密码
+EMAIL_HOST_USER = 'ais580com@foxmail.com'       #我自己的邮箱
+EMAIL_HOST_PASSWORD = 'myqvjoquxstbbccj'                  #我的邮箱密码
 EMAIL_SUBJECT_PREFIX = u'[580网]'            #为邮件Subject-line前缀,默认是'[django]'
 EMAIL_USE_TLS = True                             #与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
 #管理员站点
-SERVER_EMAIL = '674702627@qq.com'            #The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
-DEFAULT_FROM_EMAIL = '674702627@qq.com'
+SERVER_EMAIL = 'ais580com@foxmail.com'            #The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
+DEFAULT_FROM_EMAIL = 'ais580com@foxmail.com'
 DOMAIN='ais580.com'
 
 SECRET_KEY = '8lu*6g0lg)9z!ba+a$ehk)xt)x%rxgb$i1&amp;022shmi1jcgihb*'

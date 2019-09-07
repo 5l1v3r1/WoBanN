@@ -1,8 +1,9 @@
 {% extends 'index.html' %}
 {% block page-content %}
 
-
- <div class="wpn" id="project">
+<div style="margin-top: 80px">
+</div>
+<div class="wpn" id="project">
         <!--  -->
         <div class="cl pos">
             <ul class="h-screen">
@@ -23,18 +24,18 @@
                                     <!--<img width="280" height="210" src="/medias/{{news_list.newpic}}"  class="imgloadinglater" alt="大话手游项目作品" rel="nofollow" style="display: inline;">-->
                                 <!--</a>-->
                             <!--</div>-->
-                            <div class="info">
+                            <div class="info"  href="/docdetail/{{news_list.id}}/">
+                                <a href="/docdetail/{{news_list.id}}">
                                 <h4 class="title ellipsis download">
                                 	                                   {{news_list.title}}                              </h4>
-                                                                <div class="msg mtn cl">
-                                    <span class="classify">原创</span>
-                                    <span><i class="icon-eye" title="浏览数"></i><em>{{news_list.focususer.count}}</em></span>
 
-                     <span><i class="icon-comment" title="评论数"></i><em>{{news_list.reply_count}}</em></span>
-                        <span><i class="icon-leaf" title="点赞数"></i><em>{{ news_list.favor_count}}</em></span>
+                                                                <div class="msg mtn cl">
+                                    <span><em>关注:{{news_list.focususer.count}}</em></span>
+                        <span><em>点赞:{{ news_list.favor_count}}</em></span>
                                 </div>
+                                                     </a>
                                 <p class="user cl">
-                                    <a href="http://i.ui.cn/ucenter/1060864.html" target="_blank">
+                                    <a >
                                         <img src="/medias/{{news_list.user.userpic}}" title="zengtaofrank">
                                         <strong class="name">
                                         <em>{{news_list.user.username}}</em>
@@ -46,12 +47,17 @@
                         </li>
                 		{% endfor %}
                         <li>
- <div class="h_page mtn mbw">
+                        </li>
+  </ul>
+</div>
+
+            <div class="h_page mtn mbw">
                 <ul class="cl">
                    {{ page }}
-
+                    <!--li><a href="/list.html?r=main&p=2" target="_blank">...</a></li-->
                 </ul>
 
 {% endblock %}
 
- </div>
+            </div>
+

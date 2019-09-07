@@ -382,11 +382,11 @@ def register(request):
     if request.method == 'POST':
         try:
             token = token_confirm.generate_validate_token(username)
-            message1 = "\n".join([u'{0},欢迎加入{{web_name}}'.format(username), u'请访问该链接，完成用户验证:',
+            message1 = "\n".join([u'{0},欢迎加入580网'.format(username), u'请访问该链接，完成用户验证:',
                                   '/'.join([settings.DOMAIN, 'activate', token])])
             message2 = "\n".join([u'{0}新用户注册'.format(username)])
-            msg1 = ('新用户注册', message1, '674702627@qq.com', [email])
-            msg2 = ('新用户注册', message2, '674702627@qq.com', ['674702627@qq.com'])
+            msg1 = ('新用户注册', message1, settings.DEFAULT_FORM_EMAIL, [email])
+            msg2 = ('新用户注册', message2, settings.DEFAULT_FORM_EMAIL, [settings.DEFAULT_FORM_EMAIL])
             res = send_mass_mail((msg1, msg2), fail_silently=False)
             ret['message'] = '请登入邮箱验证登入'
             ret['status'] = '1'
@@ -543,23 +543,23 @@ def docdetail(request,new_id,**kwargs):
     except Exception as e:
         pass
     content = markdown.markdown(docnews.content,
-                      extensions=[
-                          'markdown.extensions.extra',
-                            'markdown.extensions.abbr',
-                            'markdown.extensions.attr_list',
-                            'markdown.extensions.def_list',
-                            'markdown.extensions.fenced_code',
-                            'markdown.extensions.footnotes',
-                            'markdown.extensions.tables',
-                            'markdown.extensions.admonition',
-                            'markdown.extensions.codehilite',
-                            'markdown.extensions.meta',
-                            'markdown.extensions.nl2br',
-                            'markdown.extensions.sane_lists',
-                            'markdown.extensions.smarty',
-                            'markdown.extensions.toc',
-                            'markdown.extensions.wikilinks',
-                      ])
+                                extensions=[
+                                    'markdown.extensions.extra',
+                                    'markdown.extensions.abbr',
+                                    'markdown.extensions.attr_list',
+                                    'markdown.extensions.def_list',
+                                    'markdown.extensions.fenced_code',
+                                    'markdown.extensions.footnotes',
+                                    'markdown.extensions.tables',
+                                    'markdown.extensions.admonition',
+                                    'markdown.extensions.codehilite',
+                                    'markdown.extensions.meta',
+                                    'markdown.extensions.nl2br',
+                                    'markdown.extensions.sane_lists',
+                                    'markdown.extensions.smarty',
+                                    'markdown.extensions.toc',
+                                    'markdown.extensions.wikilinks',
+                                ])
     docnews.content = content
     ret['docnews'] = docnews
     ret['category'] = category
@@ -1429,7 +1429,18 @@ def search(request,**kwargs):
         ret['data'] = results
         ret['type'] = "videodetail"
     elif searchtype == "article":
-        document_data = models.DocumentData.objects.filter(Q(title__icontains =keyword)|Q(content__icontains=keyword))
+        page = request.GET.get('page')
+        per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
+        docpage = common.try_int(page, 1)
+        docCount = models.DocumentData.objects.filter(check_enable=True).filter(
+            Q(title__icontains=keyword) | Q(content__icontains=keyword)).order_by("-create_date").count()
+        ret['count'] = docCount
+        DocPageObj = mobile_html_helper.PageInfo(docpage, docCount, per_item)
+        doc_page = mobile_html_helper.Pager(docpage, DocPageObj.all_page_count,'/search/?keywords=%s&type=%s&page='%(keyword,searchtype))
+        document_data = models.DocumentData.objects.filter(check_enable=True).filter(
+            Q(title__icontains=keyword) | Q(content__icontains=keyword)).order_by("-create_date")[
+                        DocPageObj.start: DocPageObj.end]
+        ret['page'] = doc_page
         ret['data'] = document_data
         ret['type'] = 'docdetail'
     elif searchtype == "teacher":
@@ -1758,6 +1769,10 @@ def mobile_index(request,**kwargs):
             carousel.newlink = "/mobile_carousel_docdetail/" + str(carousel.id)
     ret['carousel_data'] = carousel_data
     ret['data'] = results
+    if indexpage >= 1:
+        ret['scroll'] = 600
+    else:
+        ret['scroll'] = 0
     ret['count'] = count
     ret['nowCount'] = nowCount
     ret['page'] = page_string
@@ -1901,6 +1916,10 @@ def mobile_doccategory(request, **kwargs):
             carousel.newlink = "/mobile_carousel_docdetail/" + str(carousel.id)
     toutiaos = models.DocumentData.objects.filter(check_enable=True,).filter(~Q(category__id=5)).order_by("-favor_count")[0:4]
     ret['toutiaos'] = toutiaos
+    if cate_id >= 1:
+        ret['scroll'] = 600
+    else:
+        ret['scroll'] = 0
     ret['carousel_data'] = carousel_data
     ret['data'] = document_data
     ret['count'] = docCount
@@ -2082,6 +2101,10 @@ def mobile_docindex(request,**kwargs):
     per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
 
     docpage = kwargs['page']
+    if docpage != '':
+        ret['scroll'] = 600
+    else:
+        ret['scroll'] = 0
     docpage = common.try_int(docpage, 1)
     category = models.Category.objects.all()
 
@@ -2092,7 +2115,10 @@ def mobile_docindex(request,**kwargs):
 
         pass
     #文档教程数据渲染
+
+
     docCount = models.DocumentData.objects.all().count()
+    ret['count'] = docCount
     DocPageObj = mobile_html_helper.PageInfo(docpage, docCount, per_item)
     doc_page = mobile_html_helper.Pager(docpage, DocPageObj.all_page_count, '/mobile_docindex/')
     document_data = models.DocumentData.objects.filter(check_enable=True).order_by("-create_date")[DocPageObj.start: DocPageObj.end]
@@ -2105,7 +2131,6 @@ def mobile_docindex(request,**kwargs):
             carousel.newlink = "/mobile_carousel_docdetail/" + str(carousel.id)
     ret['carousel_data'] = carousel_data
     ret['data'] = document_data
-    ret['count'] = docCount
     ret['keyword'] = '请输入你要查找的内容'
     ret['page'] = doc_page
     ret['toutiaos'] = toutiaos
@@ -2113,6 +2138,7 @@ def mobile_docindex(request,**kwargs):
     ret['detail_url'] ='mobile_docdetail/'
     ret['index_doc_selected'] = 'active'
     ret['doc_selected'] = 'active'
+    ret['new_doc_selected'] = 'selected'
     ret['category_url'] = 'mobile_doccategory'
 
     response = render_to_response('mobile_docindex.html', ret, context_instance=RequestContext(request))
@@ -2219,11 +2245,11 @@ def mobile_register(request):
     if request.method == 'POST':
         try:
             token = token_confirm.generate_validate_token(username)
-            message1 = "\n".join([u'{0},欢迎加入{{web_name}}'.format(username), u'请访问该链接，完成用户验证:',
-                                  '/'.join(['http://',settings.DOMAIN, 'activate', token])])
+            message1 = "\n".join([u'{0},欢迎加入580网'.format(username), u'请访问该链接，完成用户验证:',
+                                  '/'.join([settings.DOMAIN, 'activate', token])])
             message2 = "\n".join([u'{0}新用户注册'.format(username)])
-            msg1 = ('新用户注册', message1, '674702627@qq.com', [email])
-            msg2 = ('新用户注册', message2, '674702627@qq.com', ['674702627@qq.com'])
+            msg1 = ('新用户注册', message1, settings.DEFAULT_FORM_EMAIL, [email])
+            msg2 = ('新用户注册', message2, settings.DEFAULT_FORM_EMAIL, [settings.DEFAULT_FORM_EMAIL])
             res = send_mass_mail((msg1, msg2), fail_silently=False)
             ret['message'] = '请登入邮箱验证登入'
             ret['status'] = '1'
@@ -2292,19 +2318,23 @@ def mobile_search(request,**kwargs):
         ret['message'] = 'not login'
         return HttpResponse(json.dumps(ret))
     searchtype = request.GET.get('type')
+    page = request.GET.get('page')
     keyword = request.GET.get('keywords')
     category = models.Category.objects.all()
     # toutiaos = models.DocumentData.objects.filter(check_enable=True,).filter(~Q(category__id=5)).order_by("-favor_count")[0:4]
     # ret['toutiaos'] = toutiaos
     ret['category'] = category
+    ret['search'] = 'search'
+    ret['search_result'] = '搜索结果:'
     ret['keyword'] = keyword
     carousel_data = models.Carousel.objects.all()
+
     for carousel in carousel_data:
         if carousel.newlink:
             carousel.newlink = carousel.newlink
         else:
             carousel.newlink = "/mobile_carousel_docdetail/" + str(carousel.id)
-    ret['carousel_data'] = carousel_data
+    # ret['carousel_data'] = carousel_data
     try:
         username = models.Admin.objects.get(username__username=request.session.get('is_login', 'None'))
         ret['username'] = username
@@ -2313,9 +2343,9 @@ def mobile_search(request,**kwargs):
         pass
     if searchtype == 'project':
         # 多个字段模糊查询， 括号中的下划线是双下划线，双下划线前是字段名，双下划线后可以是icontains或contains,区别是是否大小写敏感，竖线是或的意思
-        video = models.News.objects.filter(Q(title__icontains=keyword) \
+        video = models.News.objects.filter(check_enable=True).filter(Q(title__icontains=keyword) \
                                                         | Q(content__icontains=keyword))
-        article = models.DocumentData.objects.filter(Q(title__icontains=keyword) \
+        article = models.DocumentData.objects.filter(check_enable=True).filter(Q(title__icontains=keyword) \
                                                         | Q(content__icontains=keyword))
 
         ret['type'] = "videodetail"
@@ -2323,14 +2353,23 @@ def mobile_search(request,**kwargs):
         ret['article_data'] = article
     elif searchtype == "video":
         # 单个字段模糊查询
-        results = models.News.objects.filter(Q(title__icontains=keyword)|Q(content__icontains=keyword))
+        results = models.News.objects.filter(check_enable=True).filter(Q(title__icontains=keyword)|Q(content__icontains=keyword))
         ret['data'] = results
         ret['type'] = "videodetail"
         ret['video_selected'] = 'active'
         response = render_to_response('mobile_index.html', ret, context_instance=RequestContext(request))
         return response
     elif searchtype == "article":
-        document_data = models.DocumentData.objects.filter(Q(title__icontains =keyword)|Q(content__icontains=keyword))
+        per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
+        docpage = common.try_int(page, 1)
+        docCount = models.DocumentData.objects.filter(check_enable=True).filter(
+            Q(title__icontains=keyword) | Q(content__icontains=keyword)).order_by("-create_date").count()
+        ret['count'] = docCount
+        DocPageObj = mobile_html_helper.PageInfo(docpage, docCount, per_item)
+        doc_page = mobile_html_helper.Pager(docpage, DocPageObj.all_page_count,'/mobile_search/?keywords=%s&type=%s&page='%(keyword,searchtype))
+        document_data = models.DocumentData.objects.filter(check_enable=True).filter(
+            Q(title__icontains=keyword) | Q(content__icontains=keyword)).order_by("-create_date")[DocPageObj.start: DocPageObj.end]
+        ret['page'] = doc_page
         ret['data'] = document_data
         ret['type'] = 'docdetail'
         ret['doc_selected'] = 'active'
@@ -2350,9 +2389,17 @@ def mobile_search(request,**kwargs):
        ret['message'] = '查询类型有误'
 
 @outer
-def mobile_user_center(request):
+def mobile_user_center(request,**kwargs):
     ret = {'username':'', 'message':'', 'category':'', 'collect_count':'','web_name':settings.WEB_NAME}
     session_logined = request.session.get('is_login','none')
+    per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
+
+    docpage = kwargs['page']
+    # if docpage != '':
+    #     ret['scroll'] = 600
+    # else:
+    #     ret['scroll'] = 0
+    page = common.try_int(docpage, 1)
 
     category = models.Category.objects.all()
     ret['category'] = category
@@ -2365,12 +2412,21 @@ def mobile_user_center(request):
 
 
     show_collect = User.objects.filter(username=session_logined).first()
-    show_collect_docs = show_collect.documentdata_set.all().order_by("-create_date")
+  #  show_collect_docs = show_collect.documentdata_set.all().order_by("-create_date")
     ret['category'] = category
+
+
+    docpage = common.try_int(page, 1)
+    docCount = show_collect.documentdata_set.all().order_by("-create_date").count()
+    ret['count'] = docCount
+    DocPageObj = mobile_html_helper.PageInfo(docpage, docCount, per_item)
+    doc_page = mobile_html_helper.Pager(docpage, DocPageObj.all_page_count,
+                                        '/mobile_user_center/')
+    show_collect_docs = show_collect.documentdata_set.all().order_by("-create_date").order_by("-create_date")[
+                    DocPageObj.start: DocPageObj.end]
+    ret['page'] = doc_page
     ret['show_collect_docs'] = show_collect_docs
     ret['collect_count'] = len(show_collect_docs)
-
-
     response = render_to_response('mobile_user_center.html', ret, context_instance=RequestContext(request))
     return response
 
