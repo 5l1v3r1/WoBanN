@@ -66,7 +66,7 @@ vim /etc/nginx/nginx.conf
 
 server {
     listen 80; #暴露给外部访问的端口
-    server_name www.ais580.com;
+    server_name hicloudcollege.com;
         charset utf-8;
     location / {
         include uwsgi_params;

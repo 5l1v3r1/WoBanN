@@ -63,7 +63,18 @@ def outer(main_func):
         if request.session.get('is_login', 'None') != 'None':
             return main_func(request, *args, **kwargs)
         else:
-            return redirect('/login')
+            try:
+                docdetail_id = request.META['HTTP_REFERER'].split('/')[-2]
+                docdetail_id = int(docdetail_id)
+                docdetail_uri = request.META['HTTP_REFERER'].split('/')[-3]
+                if docdetail_id:
+                    url = '?'+ docdetail_uri + '=' + str(docdetail_id)
+                else:
+                    url = '/'
+            except Exception:
+                url = '/'
+
+            return redirect('/login'+url)
     return wrapper
 
 
@@ -87,17 +98,19 @@ def checkMobile(main_func):
         _long_matches = re.compile(_long_matches, re.IGNORECASE)
         _short_matches = r'1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|e\-|e\/|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(di|rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|xda(\-|2|g)|yas\-|your|zeto|zte\-'
         _short_matches = re.compile(_short_matches, re.IGNORECASE)
-
+        uri = ''
+        for i, v in request.GET.items():
+            uri = '?' + i + '=' + v
         if _long_matches.search(userAgent) != None:
             if request.path == '/':
                 request.path = '/index'
-            url_path = '/'+'mobile_'+request.path.strip('/')
+            url_path = '/'+'mobile_'+request.path.strip('/') + uri
             return redirect(url_path)
         user_agent = userAgent[0:4]
         if _short_matches.search(user_agent) != None:
             if request.path == '/':
                 request.path = '/index'
-            url_path = '/'+'mobile_' + request.path.strip('/')
+            url_path = '/'+'mobile_' + request.path.strip('/')  + uri
             return redirect(url_path)
         return main_func(request, *args, **kwargs)
 
@@ -172,7 +185,7 @@ def index(request,**kwargs):
     #servercode.save(BASE_DIR + "/medias/qcode/server.jpg")
     # 视频教程数据渲染
     indexpage = kwargs['page']
-    per_item = common.try_int(request.COOKIES.get("pager_num", 20), 20)
+    per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
     indexpage = common.try_int(indexpage, 1)
     docpage = 1
     count = models.News.objects.all().count()
@@ -239,6 +252,16 @@ def login(request):
     :return:
     '''
     ret = {'status': 0, 'message': '', 'category': '','web_name':settings.WEB_NAME}
+    try:
+        docdetail_id = request.META['HTTP_REFERER'].split('=')[-1]
+        docdetail_uri = request.META['HTTP_REFERER'].split('=')[-2].split('?',-1)[-1]
+        docdetail_id = int(docdetail_id)
+        if docdetail_id:
+            url = "/" + docdetail_uri + "/"+ str(docdetail_id)
+        else:
+            url = '/'
+    except Exception:
+        url = '/'
     loginSession = request.session.get('is_login', None)
     category = models.Category.objects.all()
     ret['category'] = category
@@ -262,7 +285,7 @@ def login(request):
                     if adminuser.user_valid == True:
                         request.session['current_user_id'] = adminuser.id
                         request.session['is_login'] = adminuser.username.username
-                        return redirect('/')
+                        return redirect(url)
                     else:
                         ret['message'] = '账户未激活'
                 else:
@@ -433,13 +456,23 @@ def register(request):
 @checkMobile
 def logout(request):
     logoutSession = request.session.get('is_login', None)
+    docdetail_id = request.META['HTTP_REFERER'].split('/')[-2]
+    docdetail_uri = request.META['HTTP_REFERER'].split('/')[-3]
+    try:
+        docdetail_id = int(docdetail_id)
+        if docdetail_id:
+            url = '/'+docdetail_uri +'/'+ str(docdetail_id)
+        else:
+            url = '/'
+    except Exception:
+        url = '/'
     if logoutSession:
         del request.session['is_login']
         del request.session['current_user_id']
         loginSession = request.session.get('is_login', None)
-        return redirect('/')
+        return redirect(url)
     else:
-        return redirect('/')
+        return redirect(url)
 
 @checkMobile
 def category(request, **kwargs):
@@ -461,7 +494,7 @@ def category(request, **kwargs):
     cate_id = int(cate_aid[29])
     cate_page = kwargs['page']
     doc_cate_page = 1
-    per_item = common.try_int(request.COOKIES.get("pager_num", 20), 20)
+    per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
     cate_page = common.try_int(cate_page, 1)
     count = models.News.objects.filter(category__id=cate_id).count()
     pageObj = html_helper.PageInfo(cate_page, count, per_item)
@@ -525,6 +558,21 @@ def docdetail(request,new_id,**kwargs):
     '''
     ret = {'docnews': '', 'username': '', 'category': '', 'nowuser': '','web_name':settings.WEB_NAME,'tuijian':[]}
     docnews = models.DocumentData.objects.get(id=new_id)
+    carousel_data = models.Carousel.objects.all()
+    ret['carousel_data'] = carousel_data
+    predoc = None
+    new_id = int(new_id)
+    if new_id > 1:
+        try:
+            predoc = models.DocumentData.objects.get(id=new_id - 1)
+        except models.DocumentData.DoesNotExist as e:
+            predoc = None
+    try:
+        nextdoc = models.DocumentData.objects.get(id=new_id + 1)
+    except models.DocumentData.DoesNotExist as e:
+        nextdoc = None
+    ret['predoc'] = predoc
+    ret['nextdoc'] = nextdoc
     tuijian = []
     new_type = docnews.news_type.all()
     if new_type:
@@ -536,12 +584,15 @@ def docdetail(request,new_id,**kwargs):
             tuijian = tuijian + tuijian_one
     else:
         tuijian = []
+    if len(tuijian) > 10:
+        tuijian = tuijian[0:9]
     category = models.Category.objects.all()
     try:
         username = models.Admin.objects.get(username__username=request.session.get('is_login', 'None'))
         ret['username'] = username
     except Exception as e:
         pass
+    docnews.content = docnews.content.replace('\r\n','<br>')
     content = markdown.markdown(docnews.content,
                                 extensions=[
                                     'markdown.extensions.extra',
@@ -563,6 +614,7 @@ def docdetail(request,new_id,**kwargs):
     docnews.content = content
     ret['docnews'] = docnews
     ret['category'] = category
+    ret['detail_type'] = 'docdetail'
     ret['tuijian'] = tuijian
     return render_to_response('docdetail.html', ret, context_instance=RequestContext(request))
 
@@ -611,7 +663,7 @@ def advertising_docdetail(request,new_id,**kwargs):
         pass
     ret['docnews'] = docnews
     ret['category'] = category
-
+    ret['detail_type'] = 'advertising_docdetail'
     return render_to_response('advertising.html', ret, context_instance=RequestContext(request))
 
 @checkMobile
@@ -924,6 +976,32 @@ def collectbox(request):
     ret['data'] = show_collect_docs
 
     return render_to_response('mobile_docindex.html', ret, context_instance=RequestContext(request))
+
+@outer
+def com_collectbox(request):
+    '''收藏夹
+
+    :param request:
+    :return:
+    '''
+    ret = {'category': '', 'username': '','show_collect_videos':''}
+    category = models.Category.objects.all()
+    session_username = request.session.get('is_login', 'None')
+
+    try:
+        username = models.Admin.objects.get(username__username=session_username)
+        ret['username'] = username
+    except Exception as e:
+        pass
+    show_collect = User.objects.filter(username=session_username).first()
+    show_collect_videos = show_collect.news_set.all().order_by("-create_date")
+    show_collect_docs = show_collect.documentdata_set.all().order_by("-create_date")
+    ret['category'] = category
+    ret['show_collect_videos'] = show_collect_videos
+    ret['show_collect_docs'] = show_collect_docs
+    ret['data'] = show_collect_docs
+
+    return render_to_response('collectbox.html', ret, context_instance=RequestContext(request))
 
 @outer
 def usercenter(request):
@@ -1267,6 +1345,7 @@ def save(request, *args, **kwargs):
                         category=category,
                         title=title,
                         content=content,
+                        check_enable=True,
                         course_price=course_price,
                         newpic=cover_image_static,
                         # news_type__display=tag_obj_list,
@@ -1386,13 +1465,21 @@ def doc_collection(request):
         return HttpResponse(json.dumps(ret))
 
     doc_new_id = request.POST.get('docNewid')
+    click_type = request.POST.get('clickType')
     username_logined = User.objects.get(username=session_logined)
 
-    new = models.DocumentData.objects.get(id=doc_new_id)
-    if new.focususer.filter(username=username_logined).first():
-        ret['message'] = 'already focus'
-        return HttpResponse(json.dumps(ret))
-    new.focususer.add(username_logined)
+    if click_type !='cancel':
+        new = models.DocumentData.objects.get(id=doc_new_id)
+        if new.focususer.filter(username=username_logined).first():
+            ret['message'] = 'already focus'
+            return HttpResponse(json.dumps(ret))
+        new.focususer.add(username_logined)
+    else:
+        new = models.DocumentData.objects.get(id=doc_new_id)
+        if not new.focususer.filter(username=username_logined).first():
+            ret['message'] = 'already del focus'
+            return HttpResponse(json.dumps(ret))
+        new.focususer.remove(username_logined)
     ret['message'] = 'ok'
     ret['focus_count'] = new.focususer.count()
 
@@ -1409,6 +1496,12 @@ def search(request,**kwargs):
         ret['message'] = 'not login'
         return HttpResponse(json.dumps(ret))
 
+    try:
+        username = models.Admin.objects.get(username__username=request.session.get('is_login', 'None'))
+        ret['username'] = username
+    except Exception as e:
+
+        pass
     searchtype = request.GET.get('type')
     keyword = request.GET.get('keywords')
     category = models.Category.objects.all()
@@ -1438,8 +1531,7 @@ def search(request,**kwargs):
         DocPageObj = mobile_html_helper.PageInfo(docpage, docCount, per_item)
         doc_page = mobile_html_helper.Pager(docpage, DocPageObj.all_page_count,'/search/?keywords=%s&type=%s&page='%(keyword,searchtype))
         document_data = models.DocumentData.objects.filter(check_enable=True).filter(
-            Q(title__icontains=keyword) | Q(content__icontains=keyword)).order_by("-create_date")[
-                        DocPageObj.start: DocPageObj.end]
+            Q(title__icontains=keyword) | Q(content__icontains=keyword)).order_by("-create_date")[DocPageObj.start: DocPageObj.end]
         ret['page'] = doc_page
         ret['data'] = document_data
         ret['type'] = 'docdetail'
@@ -1453,6 +1545,7 @@ def search(request,**kwargs):
        ret['message'] = '查询类型有误'
 
     response = render_to_response('search.html', ret, context_instance=RequestContext(request))
+
     return response
 
 
@@ -1614,7 +1707,7 @@ def goods_list(request, *args, **kwargs):
 #    servercode.save(BASE_DIR + "/medias/qcode/server.jpg")
 #    # 视频教程数据渲染
 #    indexpage = kwargs['page']
-#    per_item = common.try_int(request.COOKIES.get("pager_num", 20), 20)
+#    per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
 #    indexpage = common.try_int(indexpage, 1)
 #    docpage = 1
 #    count = models.courses.objects.all().count()
@@ -1915,12 +2008,12 @@ def mobile_doccategory(request, **kwargs):
         else:
             carousel.newlink = "/mobile_carousel_docdetail/" + str(carousel.id)
     toutiaos = models.DocumentData.objects.filter(check_enable=True,).filter(~Q(category__id=5)).order_by("-favor_count")[0:4]
-    ret['toutiaos'] = toutiaos
+    # ret['toutiaos'] = toutiaos
     if cate_id >= 1:
         ret['scroll'] = 600
     else:
         ret['scroll'] = 0
-    ret['carousel_data'] = carousel_data
+    # ret['carousel_data'] = carousel_data
     ret['data'] = document_data
     ret['count'] = docCount
     ret['page'] = doc_page
@@ -1931,6 +2024,33 @@ def mobile_doccategory(request, **kwargs):
     response = render_to_response('mobile_docindex.html', ret, context_instance=RequestContext(request))
     response.set_cookie('pager_num', per_item)
     return response
+
+
+def check_if_pre(new_id):
+    new_id = new_id - 1
+    predoc = models.DocumentData.objects.filter(id=new_id).first()
+    if not predoc:
+        if new_id >= 1:
+            predoc = check_if_pre(new_id)
+            return predoc
+        else:
+            return None
+    else:
+        return predoc
+
+
+
+def check_if_next(new_id,all_count):
+    new_id = new_id + 1
+    next_docc = models.DocumentData.objects.filter(id=new_id).first()
+    if not next_docc:
+        if new_id <= all_count:
+            next_docc = check_if_next(new_id,all_count)
+            return next_docc
+        else:
+            return None
+    else:
+        return next_docc
 
 def mobile_docdetail(request,new_id,**kwargs):
     '''页面详细渲染
@@ -1946,16 +2066,12 @@ def mobile_docdetail(request,new_id,**kwargs):
     predoc = None
     new_id = int(new_id)
     docnews = models.DocumentData.objects.get(id=new_id)
+    ret['cate_id'] = docnews.category.id
     carousel_data = models.Carousel.objects.all()
-    if new_id > 1:
-        try:
-            predoc = models.DocumentData.objects.get(id=new_id-1)
-        except models.DocumentData.DoesNotExist as e:
-            predoc = None
-    try:
-        nextdoc = models.DocumentData.objects.get(id=new_id+1)
-    except models.DocumentData.DoesNotExist as e:
-        nextdoc=None
+    predoc = check_if_pre(new_id)
+    all_count = models.DocumentData.objects.order_by('-id')[0]
+    all_count = all_count.id
+    nextdoc = check_if_next(new_id,all_count)
 
     all_lable = models.NewType.objects.all()
     new_type = docnews.news_type.all()
@@ -1969,7 +2085,8 @@ def mobile_docdetail(request,new_id,**kwargs):
 
     else:
         tuijian = []
-
+    if len(tuijian)>10:
+        tuijian = tuijian[0:9]
     category = models.Category.objects.all()
 
     try:
@@ -1977,7 +2094,7 @@ def mobile_docdetail(request,new_id,**kwargs):
         ret['username'] = username
     except Exception as e:
         pass
-
+    docnews.content = docnews.content.replace('\r\n','<br>')
     content = markdown.markdown(docnews.content,
                                 extensions=[
                                     'markdown.extensions.extra',
@@ -1997,13 +2114,23 @@ def mobile_docdetail(request,new_id,**kwargs):
                                     'markdown.extensions.wikilinks',
                                 ])
     docnews.content = content
+    if request.session.get('is_login', 'None'):
+        if docnews.focususer.filter(username=request.session.get('is_login', 'None')).first():
+           ret['if_collect'] = '取消收藏'
+        else:
+            ret['if_collect'] = '收藏'
     ret['docnews'] = docnews
     ret['category'] = category
     ret['tuijian'] = tuijian
     ret['new_type'] = all_lable
     ret['predoc'] = predoc
     ret['nextdoc'] = nextdoc
+    ret['detail_type'] = 'mobile_docdetail'
     ret['carousel_data'] = carousel_data
+    ret['index_doc_selected'] = 'active'
+    ret['doc_selected'] = 'active'
+    ret['new_doc_selected'] = 'selected'
+
     return render_to_response('mobile_docdetail.html', ret, context_instance=RequestContext(request))
 
 
@@ -2041,7 +2168,7 @@ def mobile_tag_serach(request,**kwargs):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # 视频教程数据渲染
-    per_item = common.try_int(request.COOKIES.get("pager_num", 20), 20)
+    per_item = common.try_int(request.COOKIES.get("pager_num", 10), 10)
 
     docpage = kwargs['page']
     docpage = common.try_int(docpage, 1)
@@ -2115,8 +2242,6 @@ def mobile_docindex(request,**kwargs):
 
         pass
     #文档教程数据渲染
-
-
     docCount = models.DocumentData.objects.all().count()
     ret['count'] = docCount
     DocPageObj = mobile_html_helper.PageInfo(docpage, docCount, per_item)
@@ -2129,11 +2254,12 @@ def mobile_docindex(request,**kwargs):
             carousel.newlink = carousel.newlink
         else:
             carousel.newlink = "/mobile_carousel_docdetail/" + str(carousel.id)
-    ret['carousel_data'] = carousel_data
+    if docpage <= 1:
+        ret['carousel_data'] = carousel_data
+        ret['toutiaos'] = toutiaos
     ret['data'] = document_data
     ret['keyword'] = '请输入你要查找的内容'
     ret['page'] = doc_page
-    ret['toutiaos'] = toutiaos
     ret['category'] = category
     ret['detail_url'] ='mobile_docdetail/'
     ret['index_doc_selected'] = 'active'
@@ -2154,6 +2280,17 @@ def mobile_login(request):
     '''
     ret = {'status': 0, 'message': '', 'category': '','web_name':settings.WEB_NAME}
     loginSession = request.session.get('is_login', None)
+
+    try:
+        docdetail_id = request.META['HTTP_REFERER'].split('=')[-1]
+        docdetail_uri = request.META['HTTP_REFERER'].split('=')[-2].split('?', -1)[-1]
+        docdetail_id = int(docdetail_id)
+        if docdetail_id:
+            url = "/" + docdetail_uri + "/" + str(docdetail_id)
+        else:
+            url = '/'
+    except Exception:
+        url = '/'
     category = models.Category.objects.all()
     ret['category'] = category
     if_username = models.Admin.objects.filter(username__username=loginSession)
@@ -2176,15 +2313,13 @@ def mobile_login(request):
                     if adminuser.user_valid == True:
                         request.session['current_user_id'] = adminuser.id
                         request.session['is_login'] = adminuser.username.username
-                        return redirect('/mobile_index')
+                        return redirect(url)
                     else:
                         ret['message'] = '账户未激活'
                 else:
                     user = None
                     ret['message'] = '用户名密码错误'
-
                     return render_to_response('mobile_login.html', ret, context_instance=RequestContext(request))
-
             return render_to_response('mobile_login.html', ret, context_instance=RequestContext(request))
 
         except Exception as e:

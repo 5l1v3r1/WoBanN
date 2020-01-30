@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'kbhkis9znjtr^2*1_pd#21#n)fce-8z3l%a)^881p+%vx=!g)7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -161,7 +161,7 @@ SECRET_KEY = '8lu*6g0lg)9z!ba+a$ehk)xt)x%rxgb$i1&amp;022shmi1jcgihb*'
 #MEDIA_ROOT = os.path.join(BASE_DIR)
 
 
-WEB_NAME = '580网'
+WEB_NAME = '手机赚钱-推荐几款最好用的手机赚钱软件-580热点网'
 MEDIA_URL = '/medias/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'medias')
 CKEDITOR_UPLOAD_PATH =  "/medias/upload_imgss/"

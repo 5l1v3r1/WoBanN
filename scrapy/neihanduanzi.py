@@ -2,7 +2,7 @@
 import urllib
 from django.template.defaultfilters import title
 #coding:utf-8  
-from my_mysql import My_Mysqldb
+from tools.my_mysql import My_Mysqldb
 start_url='http://neihanshequ.com/pic/'
 
 import requests
@@ -158,7 +158,7 @@ if __name__ == '__main__':
         if  t and s and newpic:
             try: 
                 sucess+=1
-                conndb=My_Mysqldb('127.0.0.1','root','','asked') #默认app01_news
+                conndb=My_Mysqldb('127.0.0.1','WoBanN','','jw1jsrTUC&v9HDzds') #默认app01_news
                 exeAdd=conndb.exeAdd(t,s,'4','',newpic)                           
                #查询
                #DescQuery=conndb.DescQuery('app01_news')

@@ -1,33 +1,51 @@
 {% extends 'mobile_docindex.html' %}
-{% block page-all %}
-
+{% block header %}
+{% load seo %}
 <head>
+ {% get_metadata %}
 <link rel="stylesheet" href="/statics/css/code.css">
-<meta name="keywords" content="580网站 {{docnews.title}}" />
+<meta name="Keywords" content="580网站 {{docnews.title}}" />
+<meta name="Description" content="580网站 {{docnews.title}}" />
 <title>{{docnews.title}}</title>
-</head>
-<style type="text/css"> img{max-width:100% } .contents{ width:auto; }
-.wrap{word-wrap:break-word;word-break:break-all; overflow: hidden;width: 100%; height: auto; } </style>
+<link rel="icon" style="max-height: 50%" href="/statics/images/logo_icon.jpg" type="img/x-ico" />
+        <meta name="baidu-site-verification" content="MpNz3dx7EI" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+                <link rel="stylesheet" href="/statics/mobile_index/base.css">
+        <link rel="stylesheet" href="/statics/mobile_index/iconfont.css">
+    <link rel="stylesheet" href="/statics/mobile_index/wap-work.css">
+
+    <script src="/statics/mobile_index/jquery.js"></script>
+    <script src="/statics/mobile_index/wap-work.js"></script>
+    <script src="/statics/mobile_index/touchslider.dev.js"></script>
+<script src="/statics/js/cart/jquery.min.js"></script>
+<script src="/statics/js/cloudcollege/doccloudcollege.js"></script>
+        <script src="/statics/js/cloudcollege/videocloudcollege.js"></script>
+        <script src="/statics/js/cloudcollege/index.js"></script>
+
+</head>
+{% endblock %}
+{% block page-all %}
+<style type="text/css">
+img{max-width:100% ;max-height: 280px; } .contents{ width:auto; }
+.wrap{word-wrap:break-word;word-break:break-all; overflow: hidden;width: 100%; height: auto; }
+iframe{max-width:100%}
+</style>
+<script src="/statics/js/cart/jquery.min.js"></script>
+    <script src="/statics/mobile_index/jquery.js"></script>
 <script src="/statics/js/cloudcollege/doccloudcollege.js"></script>
 <script type="text/javascript">
-window.onload = function (){
-	document.getElementById('divContent').scrollTop = 0
+// window.onload = function (){
+// 	document.getElementById('divContent').scrollTop = 0
+//
+// }
 
-}
+
+function docFavor(doc,id,detail_type){
 
 
-function docFavor(doc,id){
-
-if(getCookie("doc"+id)==null){
-					setCookie("doc"+id,"www.ais580.com");
-					//alert("设置cookie成功");
-				}else{
-					if(getCookie("doc"+id)=="www.ais580.com"){
-						alert("请勿重复点赞");
-						return ;
-					 }
-			}
 $.ajax({
 url:'/addfavor/',
 data:{nid:id},
@@ -38,12 +56,21 @@ success:function(callback){
 	var obj = jQuery.parseJSON(callback);
 	if (obj.status==1){
 		if (obj.username=='None'){
-		location.href = "/login/";
+		location.href = "/login/?"+detail_type+'='+id;
 						alert("请先登入再点赞");
 						}else{
 
 		var temp =  obj.data;
 		$('#favnum').text(temp);
+		if(getCookie("doc"+id)==null){
+					setCookie("doc"+id,"www.ais580.com");
+					//alert("设置cookie成功");
+				}else{
+					if(getCookie("doc"+id)=="www.ais580.com"){
+						alert("请勿重复点赞");
+						return ;
+					 }
+			}
 		}
 	}else{
 		alert(obj.message);
@@ -52,15 +79,76 @@ success:function(callback){
 });
 }
 </script>
+<script type="text/javascript">
+		function redicturl(url) {
+			console.log(url)
+			window.location.href=url;
+		}
+		function KeepScrollBar() {
+			// var scrollPos;
+			// // if (typeof document.body != 'undefined') {
+			// // 			scrollPos = document.getElementById('divContent').scrollTop;
+			// // }
+			// // else{
+			// //     scrollPos = 600;
+			// // }
+			// scrollPos = 600;
+			// document.cookie = "scrollTop=" + scrollPos;
+			console.log('test')
+		}
+
+        window.onload = function (){
+		    console.log("1111")
+		    document.getElementById('divContent').scrollTop ="{{scroll}}";
+		    console.log("{{scroll}}")
+            // if (document.cookie.match(/scrollTop=([^;]+)(;|$)/)){
+		     //    		if (document.cookie.match(/scrollTop=([^;]+)(;|$)/)[1] == 0){
+			// 				document.getElementById('divContent').scrollTop =600;
+			// 					                document.cookie = "scrollTop=" + 600;
+			// 			}else{
+		     //            document.cookie = "scrollTop=" + 600;
+			// 			console.log('exist',document.cookie.match(/scrollTop=([^;]+)(;|$)/))
+  			// 			document.getElementById('divContent').scrollTop =600;
+			// 			}
+            //
+			// }else{
+		     //    	document.getElementById('divContent').scrollTop =0;
+			// 	    document.cookie = "scrollTop=" + 600
+			// 		console.log('not exist',document.cookie.match(/scrollTop=([^;]+)(;|$)/))
+            //
+			// }
+            //
+
+
+			//
+		    	// 	        console.log('autoonload')
+            // console.log(document.cookie.match(/scrollTop=([^;]+)(;|$)/))
+            // if (document.cookie.match(/scrollTop=([^;]+)(;|$)/) != null) {
+		     //    console.log('auto')
+		     //    var arr = document.cookie.match(/scrollTop=([^;]+)(;|$)/);
+		     //    	        console.log('value')
+			// 		        console.log(arr[1])
+             //    document.getElementById('divContent').scrollTop = parseInt(arr[1]);
+            //
+            // }
+            // else{
+            //
+		    	// 	                document.getElementById('divContent').scrollTop = 600;
+			//
+            //
+			// }
+        }
+
+    </script>
 <body class="has-panel" style="height: 1058px ">
 	<div id="ajax-hook"></div>
 	<div class="wp cl pos">
 		<div class="pos" >
 			<div class="hd-user">
 				<a class="avatar" href="#" target="_blank">
-					<img src="/medias/{{docnews.user.userpic}}" onerror="this.src='/medias/images/yonhu.jpg'"></a>
+					<img src="/medias/{{docnews.user.userpic}}" onerror="this.src='/statics/images/userpic.jpg'"></a>
 				<div class="hd-user-t">
-					<h2 id="p-author"><a href="#" target="_blank">{{docnews.user.username}}</a></h2>
+					<h3 id="p-author"><a href="#" target="_blank">{{docnews.user.username}}</a></h3>
 					<p>{{docnews.create_date|date:"Y-m-d H:i:s"  }}</p>
 				</div>
 
@@ -82,11 +170,11 @@ success:function(callback){
 
 		<div class="contents wrap">
 			<p></p>
-<div style="padding-left:2em;padding-right:2em;font-size:20px;">
-			<h3>{{docnews.title}}</h3>
+<div style="padding-left:1.3em;padding-right:1.3em;font-size:20px;">
+			<h3 >{{docnews.title}}</h3>
 </div>
 		<br>
-<div style="padding-left:2em;padding-right:2em;font-size:16px;">
+<div style="padding-left:1.6em;padding-right:1.6em;font-size:16px;">
 
 			<p></p>
                   {% autoescape off %}
@@ -159,8 +247,8 @@ success:function(callback){
 	<!--</div>-->
 
 
-<div style="border-radius: 10px;background:#fff;padding:10px;font-size:14px;margin-right: 30px;
-		margin-left: 30px;margin-top:10px;margin-bottom: 20px">
+<div style="border-radius: 10px;background:#fff;padding:10px;font-size:14px;margin-right: 18px;
+		margin-left: 18px;margin-top:10px;margin-bottom: 20px">
 	<h3>推荐阅读：</h3>
 		 {% for yuedu in carousel_data %}
 		 <div>
@@ -175,8 +263,8 @@ success:function(callback){
 		 </div>
 		 {% endfor %}
 		</div>
-		<div style="border-radius: 10px;background:#eee;padding:10px;font-size:14px;margin-right: 30px;
-		margin-left: 30px;margin-top:28px;margin-bottom: 30px">
+		<div style="border-radius: 10px;background:#eee;padding:10px;font-size:14px;margin-right: 26px;
+		margin-left: 26px;margin-top:28px;margin-bottom: 30px">
 			<div>上一篇: <a href="/mobile_docdetail/{{predoc.id}}"> {{predoc.title}}</a></div>
 
 			<div>下一篇:<a href="/mobile_docdetail/{{nextdoc.id}}">{{nextdoc.title}}</a></div>
@@ -195,18 +283,20 @@ success:function(callback){
 				<!--</h3>-->
 
 		<div class="share cl">
-            <ul class="cl">
+            <ul class="cl" style="margin-left: 0px;margin-right: 0px">
 							<!--li class="ishare"><a href="javascript:;"><i class="iconfont icon-share"></i>分享</a></li>
 							<li class="icomment">
 							<a href="http://ui.cn/login.html"><i class="iconfont icon-comment"></i>评论</a>			</li-->
 							<li class="istar" data="addfav">
-							<a onclick="doc_collect(this,'{{ docnews.id }}')" id="fav" rel="301730" _rel="1071158">
-								<i class="iconfont icon-star"></i>
-								收藏<em id="focususer">{{docnews.focususer.count}}</em></a>
+							<a onclick="doc_collect(this,'{{ docnews.id }}')" style="margin-left: 18px" id="fav" rel="301730" _rel="1071158">
+								<!--<i class="iconfont icon-star"></i>-->
+								{{if_collect}}
+
+								<em id="focususer">{{docnews.focususer.count}}</em></a>
 				</li>
 				<li class="iheart" data="like" id="like" rel="301730" _rel="1071158">
-					<a onclick="docFavor(this,'{{ docnews.id }}')">
-						<i class="iconfont icon-heart"></i>赞
+					<a onclick="docFavor(this,'{{ docnews.id }}','{{detail_type}}')">
+						<!--<i class="iconfont icon-heart"></i>赞-->赞
 						<em id="favnum">{{docnews.favor_count}}</em>
 
 					</a>
@@ -277,7 +367,7 @@ success:function(callback){
 			</div>	</div><!-- .wp -->
 
 
-<h2 style="margin-left:30px;margin-top: 15px;margin-bottom: 13px">猜你喜欢</h2>
+<h2 style="margin-left:20px;margin-top: 15px;margin-bottom: 13px">猜你喜欢</h2>
 
 	<div class="body pos">
 

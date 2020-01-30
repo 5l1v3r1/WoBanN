@@ -22,7 +22,7 @@ import django
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    url(r'^login/$', login),
+    url(r'^login/.*', login),
     url(r'^accounts/login/$',login),
     url(r'^(?P<page>\d*)$', index),
     url(r'^register/$', register),
@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^videoplayer/(\d+)/$', videoplayer),
     url(r'^uploadindex/$', uploadindex),
     url(r'^collectbox/$', collectbox),
+    url(r'^com_collectbox/$', com_collectbox),
     url(r'^user_center/$', user_center),
     url(r'^usercenter/$', usercenter),
     url(r'^uploadimg/$', uploadimg),
@@ -71,7 +72,7 @@ urlpatterns = [
     url(r'^mobile_category/(\d+)/(?P<page>\d*)$', mobile_category),
     url(r'^mobile_doccategory/(\d+)/(?P<page>\d*)$', mobile_doccategory),
     url(r'^mobile_docdetail/(\d+)/$', mobile_docdetail),
-    url(r'^mobile_login/$',mobile_login),
+    url(r'^mobile_login/.*',mobile_login),
     url(r'^mobile_register/$', mobile_register),
     url(r'^mobile_user_center/(?P<page>\d*)$', mobile_user_center),
     url(r'^mobile_user_push/$', mobile_user_push),

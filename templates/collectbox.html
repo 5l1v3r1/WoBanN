@@ -13,7 +13,7 @@
 <link href="/statics/css/collectbox/background_stu.css" rel="stylesheet">
 
 
-
+<div style="margin-top: 60px"> </div>
 <div class="user_Top"STYLE="BACKGROUND-COLOR:#0080FF;">
   <div class="Page Infos" >
     <div class="Portrait fl">
@@ -133,9 +133,9 @@ $("#signToday").click(function(){
   </ul>
   <ul class="cList cList2" id="video_pubList_id" >
 {% for collect_video in show_collect_videos %}
-      <li><div class="pic"><a href="/videodetail/{{ collect_video.id }}" target="_blank">
+      <li><div class="pic"><a href="/videodetail/{{ collect_video.id }}" >
           <img src="/medias/{{ collect_video.newpic }}" onerror="this.onerror=null;this.src='/{{collect_video.newpic}}'">  </a><i class="icon del2"></i></div>
-      <div class="main"><h2><a href="/videodetail/{{ collect_video.id }}" target="_blank">{{ collect_video.title }}</a></h2>
+      <div class="main"><h2><a href="/videodetail/{{ collect_video.id }}" {{ collect_video.title }}</a></h2>
           <!--p class="fl red f16 mr10">价格 {{ collect_video.course_price }}</p-->
           </div></li>
 {% endfor %}
@@ -143,9 +143,9 @@ $("#signToday").click(function(){
 
   <ul class="cList cList2" id="doc_pubList_id"  style="display:none">
 {% for collect_doc in show_collect_docs %}
-      <li><div class="pic"><a href="/docdetail/{{ collect_doc.id }}" target="_blank">
+      <li><div class="pic"><a href="/docdetail/{{ collect_doc.id }}" >
           <img src="/medias/{{ collect_doc.newpic }}" onerror="this.onerror=null;this.src='/{{collect_doc.newpic}}'">  </a><i class="icon del2"></i></div>
-      <div class="main"><h2><a href="/docdetail/{{ collect_doc.id }}" target="_blank">{{ collect_doc.title }}</a></h2>
+      <div class="main"><h2><a href="/docdetail/{{ collect_doc.id }}" >{{ collect_doc.title }}</a></h2>
           <!--p class="fl red f16 mr1">价格 {{ collect_doc.course_price }}</p-->
           </div></li>
 {% endfor %}
@@ -284,21 +284,21 @@ $(".pageTabs li").click(function(){
 </div-->
 
 
-<div class="qqbm_bs_box" style="position: fixed;right:10px;top:42%;width: 60px;z-index: 999;cursor: pointer;opacity: .8;filter: opacity(80);">
-  <a href="#" style="display: block;" target="_blank"><img src="/statics/images/collectbox/1a462b7e409d220b47e8f1608cba8a51.png" style="display: block;"></a>
+<!--<div class="qqbm_bs_box" style="position: fixed;right:10px;top:42%;width: 60px;z-index: 999;cursor: pointer;opacity: .8;filter: opacity(80);">-->
+  <!--<a href="#" style="display: block;" target="_blank"><img src="/statics/images/collectbox/1a462b7e409d220b47e8f1608cba8a51.png" style="display: block;"></a>-->
 
-  <img src="/statics/images/collectbox/slider_02.png" onclick="$(&#39;#AdviceMask&#39;).show();$(&#39;#Advice&#39;).show();" style="display: block;margin-top: 6px;">
-  <a href="#" style="display: block;margin-top: 2px;" target="_blank">
-    <p onmousemove="$(this).children().eq(1).show();" onmouseout="$(this).children().eq(1).hide();" style="position: relative;width: 58px;height: 58px;">
-      <img src="/statics/images/collectbox/slider_05.png" style="position: absolute;left: 0;top: 0;display: block;">
-      <img src="/statics/images/collectbox/slider_05s.png" style="position: absolute;left: 0;top: 0;display: none;">
-    </p>
-  </a>
-  <div onmousemove="$(this).children().eq(1).show();" onmouseout="$(this).children().eq(1).hide();" onclick="$(window).scrollTop(0);" style="position: relative;width: 58px;height: 58px;margin-top: 2px;">
-      <img src="/statics/images/collectbox/slider_03.png" style="position: absolute;left: 0;top: 0;display: block;">
-      <img src="/statics/images/collectbox/slider_03s.png" style="position: absolute;left: 0;top: 0;display: none;">
-  </div>
-</div>
+  <!--<img src="/statics/images/collectbox/slider_02.png" onclick="$(&#39;#AdviceMask&#39;).show();$(&#39;#Advice&#39;).show();" style="display: block;margin-top: 6px;">-->
+  <!--<a href="#" style="display: block;margin-top: 2px;" target="_blank">-->
+    <!--<p onmousemove="$(this).children().eq(1).show();" onmouseout="$(this).children().eq(1).hide();" style="position: relative;width: 58px;height: 58px;">-->
+      <!--<img src="/statics/images/collectbox/slider_05.png" style="position: absolute;left: 0;top: 0;display: block;">-->
+      <!--<img src="/statics/images/collectbox/slider_05s.png" style="position: absolute;left: 0;top: 0;display: none;">-->
+    <!--</p>-->
+  <!--</a>-->
+  <!--<div onmousemove="$(this).children().eq(1).show();" onmouseout="$(this).children().eq(1).hide();" onclick="$(window).scrollTop(0);" style="position: relative;width: 58px;height: 58px;margin-top: 2px;">-->
+      <!--<img src="/statics/images/collectbox/slider_03.png" style="position: absolute;left: 0;top: 0;display: block;">-->
+      <!--<img src="/statics/images/collectbox/slider_03s.png" style="position: absolute;left: 0;top: 0;display: none;">-->
+  <!--</div>-->
+<!--</div>-->
 <div class="mask disp-n" id="AdviceMask"></div>
 <div class="Advice disp-n" id="Advice">
     <div class="Main">

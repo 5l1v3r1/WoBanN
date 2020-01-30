@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 {% load seo %}
 <html>
+ {% block header %}
 <head>
+    <meta name="baidu-site-verification" content="MpNz3dx7EI" />
+    <link rel="icon" href="/statics/images/logo_icon.jpg" style="max-height: 50%" type="img/x-ico" />
   {% get_metadata as my_meta %}
   {{ my_meta }}
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -61,6 +64,7 @@
 <![endif]-->
 <script src="/statics/js/cloudcollege/index.js"></script>
 </head>
+{% endblock %}
 
 <body>
 {{ my_meta.heading }}
@@ -72,25 +76,25 @@
 			<ul class="nav-hd cl">
 				<li id="nav-index-one"  class="{{index_selected}}"><a href="/">首页</a></li>
 
-                <!--{% for cate in category %}-->
-                <!--{% ifequal cate_id cate.id %}-->
-				<!--<li class="on"><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>-->
-                <!--{% else %}-->
-                <!--<li class=""><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>-->
-                <!--{% endifequal %}-->
-                 <!--{%endfor%}-->
+                {% for cate in category %}
+                {% ifequal cate_id cate.id %}
+				<li class="on"><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>
+                {% else %}
+                <li class=""><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>
+                {% endifequal %}
+                 {%endfor%}
 
 <!-- 先隐藏 -->
-                {% for cate in category %}
-                                {% if cate.id == 1 or cate.id == 2 or cate.id == 3 or cate.id == 5 %}
-                                    {% ifequal cate_id cate.id %}
-                            <li class="on"><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>
-                                    {% else %}
-                            <li class=""><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>
-                                    {% endifequal %}
-                                {% endif %}
+                <!--{% for cate in category %}-->
+                                <!--{% if cate.id == 1 or cate.id == 2 or cate.id == 3 or cate.id == 5 %}-->
+                                    <!--{% ifequal cate_id cate.id %}-->
+                            <!--<li class="on"><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>-->
+                                    <!--{% else %}-->
+                            <!--<li class=""><a href="/category/{{ cate.id }}/" >{{cate.name}}<i class="icon-down-one"></i></a></li>-->
+                                    <!--{% endifequal %}-->
+                                <!--{% endif %}-->
 
-					{%endfor%}
+					<!--{%endfor%}-->
                <!--<li ><a href="/">更多</a></li>-->
 
                 <!-- class="">
@@ -127,8 +131,8 @@
 								<input type="text" class="search-val" placeholder="请输入您要查找的内容" autocomplete="off" value="" name="keywords" id="keywords">
 								<ul class="options">
 									<li><a href="javascript:;">赚钱</a></li><li>
-                                    <a href="javascript:;">游戏手册</a></li>
-                                    <li><a href="javascript:;">行业资讯</a></li>
+                                    <a href="javascript:;">游戏</a></li>
+                                    <li><a href="javascript:;">生活</a></li>
                                     <li><a href="javascript:;">......</a></li>								</ul>
 							</div>
 						</div>
@@ -207,12 +211,12 @@
 
 
 						<li class="quick-item">
-							<a class="quick-toggle" href="/login">
+							<a class="quick-toggle" href="/login/?{{detail_type}}={{docnews.id}}">
 	<img class="avatar" src="/medias/{{ username.userpic }}" onerror="this.onerror=null;this.src='/statics/images/yonhu.jpg'" alt="">
 							</a>
 							<ul class="quick-menu quick-list" style="display: none;">
-								<li id="login-id" ><a href="/login"  style="padding-left:70px">登入</a></li>
-								<div  id="userlogin" element hidden><li><a href="/collectbox/" style="padding-left:50px">我的收藏</a></li>
+								<li id="login-id" ><a href="/login/?{{detail_type}}={{docnews.id}}"  style="padding-left:70px">登入</a></li>
+								<div  id="userlogin" element hidden><li><a href="/com_collectbox/" style="padding-left:50px">我的收藏</a></li>
                                   <!--li><a href="/user_center/" style="padding-left:50px">我的订单</a></li-->
 								<li><a href="/usercenter/" style="padding-left:50px">修改资料</a></li>
 								<li><a href="/logout/" style="padding-left:50px">退出登录</a></li>
@@ -298,11 +302,11 @@ o-imageLink" rel="737" target="_blank" title="懂点设计" style="display: bloc
     <!--  -->
     <div class="wpn" id="project">
         <!--  -->
-        <div class="cl pos">
+        <div class="cl pos" style="margin-top: 10px">
             <ul class="h-screen">
                 <!--li id='video_sellected_id' class="{{video_selected}}"><a  onclick="doc_hidden(this)"  title="视频教程">视频教程</a></li-->
 
-                <li id="doc_sellected_id" class="{{doc_selected}}"><a onclick="doc_show(this)" title="文章">热点</a></li>                            </ul>
+                <li id="doc_sellected_id" class="{{doc_selected}}"><a onclick="doc_show(this)" title="文章">热点资讯</a></li>                            </ul>
             <!--  -->
             <!--<ul class="h-soup cl">-->
 
@@ -376,10 +380,10 @@ o-imageLink" rel="737" target="_blank" title="懂点设计" style="display: bloc
     <div class="bg-white" id="article">
     <div id='doc_lists_id' class="wpn cl"  style="display:{{doc_visibility}}" >
         <div class="w820 z" >
-            <h1 class="h-tit mtv h-article-btn pos">
-                <!--a class="on" href="javascript:;" title="最新文档">最新文档</a-->
-                
-                                    <!--a href="/?art=article#article" title="推荐文档">推荐文档</a-->            </h1>
+            <!--<h1 class="h-tit mtv h-article-btn pos">-->
+                <!--&lt;!&ndash;a class="on" href="javascript:;" title="最新文档">最新文档</a&ndash;&gt;-->
+                <!---->
+                                    <!--&lt;!&ndash;a href="/?art=article#article" title="推荐文档">推荐文档</a&ndash;&gt;            </h1>-->
 
             <div class="h-article-box">
                 <ul class="h-article-list">
@@ -399,8 +403,8 @@ o-imageLink" rel="737" target="_blank" title="懂点设计" style="display: bloc
                                         </h1>
                                         <p>{{ docu_list.summary }}</p>
                                         <div class="mtm cl">
-                                            <span class="avatar z" href="http://i.icloudcollege.com/ucenter/151904.html" title="Seany" target="_blank">
-                                                <img width="20" height="20" src="/medias/{{docu_list.user.userpic}}" alt="Seany" rel="nofollow">
+                                            <span class="avatar z" >
+                                                <img width="20" height="20" src="/medias/{{docu_list.user.userpic}}" onerror="this.src='/statics/images/userpic.jpg'" alt="Seany" rel="nofollow">
                                                 <strong class="name">{{docu_list.user}}                                                                                                                                                  </strong>
 
                                             </span>
@@ -813,7 +817,7 @@ o-imageLink" rel="737" target="_blank" title="懂点设计" style="display: bloc
             <div class="ft-info">
 
                 <p class="copy">
-                 580网创建于2019年06月06日，推荐的项目100%免费。
+                 580网创建于2018年06月06日，推荐的项目100%免费。
 联系ais580com@foxmail.com，不接任何非正规擦边广告，仅限正规公司合作（个人项目请勿联系）！
 备案号：闽ICP备19017760号</p>
 
